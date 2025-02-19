@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  librespeed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: unittest
+    #container_name: librespeed
+    ports:
+      - "80:80"
+#    volumes:
+      #- result:/var/www/html/result
+      #- .:/speedtest
+      #- ./unit-config.json:/docker-entrypoint.d/unit-config.json
+      #- ./docker/entrypoint.sh:/docker-entrypoint.d/entrypoint.sh     
+      #- ./docker/servers.json:/servers.json
+      #- ./database/db.sql:/database/db.sql 
+    restart: unless-stopped
+    environment:
+      MODE: frontend
+      TITLE: "LibreSpeed"
+      TELEMETRY: "true"
+      ENABLE_ID_OBFUSCATION: "true"
+      #REDACT_IP_ADDRESSES: "false"
+      PASSWORD: "1234"
+      #EMAIL:
+      #DISABLE_IPINFO: "false"
+      #IPINFO_APIKEY: "your api key"
+      #DISTANCE: "km"
+      #WEBPORT: 8080
+#volumes:
+#  result:

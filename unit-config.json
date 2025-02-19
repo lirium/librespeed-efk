@@ -1,0 +1,38 @@
+{
+    "listeners": {
+        "*:80": {
+            "pass": "routes"
+        }
+    },
+    "routes": [
+        {
+            "match": {
+                "uri": ["*.js"]
+            },
+            "action": {
+                "share": [
+                    "/var/www/html/$uri"
+                 ]
+           }
+        },
+        {
+            "match": {
+                "uri": [
+                    "/"
+                ]
+            },
+            "action": {
+                "pass": "applications/test"
+            }
+        }
+
+
+    ],
+    "applications": {
+        "test": {
+            "type": "php",
+            "root": "/var/www/html/"
+                }
+
+    }
+}

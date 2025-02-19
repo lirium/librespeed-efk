@@ -84,35 +84,35 @@ if [[ "$TELEMETRY" == "true" && ("$MODE" == "frontend" || "$MODE" == "standalone
     sed -i s/\$redact_ip_addresses\ =\ .*\;/\$redact_ip_addresses\ =\ true\;/g /var/www/html/results/telemetry_settings.php
   fi
 
-  mkdir -p /database/
-  if is_alpine; then
-    chown -R apache /database/
-  else
-    chown -R www-data /database/
-  fi
+#  mkdir -p /database/
+#  if is_alpine; then
+#    chown -R apache /database/
+#  else
+#    chown -R www-data /database/
+#  fi
 fi
 
-if is_alpine; then
-  chown -R apache /var/www/html/*
-else
-  chown -R www-data /var/www/html/*
-fi
+#if is_alpine; then
+#  chown -R apache /var/www/html/*
+#else
+#  chown -R www-data /var/www/html/*
+#fi
 
 # Allow selection of Apache port for network_mode: host
-if [ "$WEBPORT" != "80" ]; then
-  if is_alpine; then
-    sed -i "s/^Listen 80\$/Listen $WEBPORT/g" /etc/apache2/httpd.conf
-  else
-    sed -i "s/^Listen 80\$/Listen $WEBPORT/g" /etc/apache2/ports.conf
-    sed -i "s/*:80>/*:$WEBPORT>/g" /etc/apache2/sites-available/000-default.conf
-  fi
-fi
+#if [ "$WEBPORT" != "80" ]; then
+#  if is_alpine; then
+#    sed -i "s/^Listen 80\$/Listen $WEBPORT/g" /etc/apache2/httpd.conf
+#  else
+#    sed -i "s/^Listen 80\$/Listen $WEBPORT/g" /etc/apache2/ports.conf
+#    sed -i "s/*:80>/*:$WEBPORT>/g" /etc/apache2/sites-available/000-default.conf
+#  fi
+#fi
 
-echo "Done, Starting APACHE"
+#echo "Done, Starting APACHE"
 
 # This runs apache
-if is_alpine; then
-  exec httpd -DFOREGROUND
-else
-  exec apache2-foreground
-fi
+#if is_alpine; then
+#  exec httpd -DFOREGROUND
+#else
+#  exec apache2-foreground
+#fi

@@ -1,7 +1,7 @@
 <?php
 
 // Type of db: "mssql", "mysql", "sqlite" or "postgresql"
-$db_type = 'mysql';
+$db_type = 'sqlite';
 // Password to login to stats.php. Change this!!!
 $stats_password = 'PASSWORD';
 // If set to true, test IDs will be obfuscated to prevent users from guessing URLs of other tests

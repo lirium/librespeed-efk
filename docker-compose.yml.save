@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  librespeed:
+    image: unit:php
+    container_name: librespeed
+    ports:
+      - "80:80"
+    volumes:
+      - ./l:/var/www/html
+     
+      - ./unit-config.json:/docker-entrypoint.d/unit-config.json
+     
+    restart: unless-stopped
