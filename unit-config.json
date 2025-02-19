@@ -1,38 +1,49 @@
 {
-    "listeners": {
-        "*:80": {
-            "pass": "routes"
-        }
-    },
-    "routes": [
-        {
-            "match": {
-                "uri": ["*.js"]
-            },
-            "action": {
-                "share": [
-                    "/var/www/html/$uri"
-                 ]
-           }
-        },
-        {
-            "match": {
-                "uri": [
-                    "/"
-                ]
-            },
-            "action": {
-                "pass": "applications/test"
-            }
-        }
+	"listeners": {
+		"*:80": {
+			"pass": "routes"
+		}
+	},
+	"routes": [
+		{
+			"match": {
+				"uri": [
+					"*.js"
+				]
+			},
+			"action": {
+				"share": [
+					"/var/www/html/$uri"
+				]
+			}
+		},
+		{
+			"match": {
+				"uri": [
+					"/"
+				]
+			},
+			"action": {
+				"pass": "applications/test"
+			}
+		},
+		{
+			"match": {
+				"uri": [
+					"/results/telemetry.php"
+				]
+			},
+			"action": {
+				"share": "/var/www/html/results/telemetry.php"
+			}
+		}
+	],
 
-
-    ],
-    "applications": {
+"applications": {
         "test": {
             "type": "php",
-            "root": "/var/www/html/"
-                }
+             "root": "/var/www/html/"
 
+        }
     }
 }

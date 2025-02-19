@@ -26,3 +26,4 @@ RUN chmod +x /docker-entrypoint.d/entrypoint.sh
 
 # Указываем порт, который будет использоваться
 EXPOSE 80
+#CMD ["unitd-debug","--no-daemon","--control","unix:/var/run/control.unit.sock"]
