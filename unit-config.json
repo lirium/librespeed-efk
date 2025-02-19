@@ -24,7 +24,7 @@
 				]
 			},
 			"action": {
-				"pass": "applications/test"
+				"pass": "applications/test/main"
 			}
 		},
 		{
@@ -34,16 +34,31 @@
 				]
 			},
 			"action": {
-				"share": "/var/www/html/results/telemetry.php"
+				"pass": "applications/test/telemetry"
 			}
 		}
 	],
 
+
 "applications": {
         "test": {
             "type": "php",
-             "root": "/var/www/html/"
+            "targets": {
+                "telemetry": {
+                    "root": "/var/www/html/"
+                },
 
+                "main": {
+                    "root": "/var/www/html/",
+                    "script": "index.php"
+                }
+            }
         }
     }
+
+
+
+
+
+
 }
