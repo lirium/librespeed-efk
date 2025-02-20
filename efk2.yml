@@ -1,0 +1,21 @@
+version: "3"
+services:
+  fluentd:
+#    image : registry.rebrainme.com/devops_users_repos/6913/dkr-30-voting:fluentd
+    build: ./fluentd/
+    volumes:
+      - fluentd/conf/:/fluentd/etc
+#      - /mnt:/usr/share/elasticsearch/data
+#    links:
+#      - "elasticsearch"
+#    environment:
+#      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+#    deploy:
+#      mode: global
+    depends_on:
+      - elasticsearch
+    networks:
+      - mynet

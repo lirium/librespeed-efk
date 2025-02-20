@@ -1,0 +1,75 @@
+version: "3"
+services:
+  fluentd:
+#    image : registry.rebrainme.com/devops_users_repos/6913/dkr-30-voting:fluentd
+    build: ./fluentd
+    volumes:
+      - ./fluentd/conf/:/fluentd/etc
+#      - /mnt:/usr/share/elasticsearch/data 
+#    links:
+#      - "elasticsearch"
+#    environment:
+#      - "ES_JAVA_OPTS=-Xms1g -Xmx1g" 
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+#    deploy:
+#      mode: global
+    depends_on:
+      - elasticsearch
+    networks:
+      - mynet
+
+  elasticsearch:
+#    image: elasticsearch:8.15.5
+    image: opensearchproject/opensearch:2
+   # image: docker.elastic.co/elasticsearch/elasticsearch:8.1.2
+    environment:
+      - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
+      - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" 
+#    expose:
+#      - 9200
+    ports:
+      - "9200:9200"
+#    depends_on:
+#      - fluentd
+    networks:
+      - mynet
+
+  kibana:
+    image: kibana:8.15.5
+   # image: docker.elastic.co/kibana/kibana:8.1.2
+ #   ports:
+#      - "5602:5601"
+#    environment:
+#      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+#    links:
+#      - "elasticsearch"
+#    depends_on:
+#      - elasticsearch
+#      - fluentd
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kibana.entrypoints=http"
+      - "traefik.http.routers.kibana.rule=PathPrefix(`/`)"       
+      - "traefik.http.services.kibana.loadbalancer.server.port=5601"
+#      mode: replicated
+#      replicas: 1
+      #placement:
+      #  constraints:
+      #    - node.role == manager
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 
+          127.0.0.1:24224
+        tag: kibana
+
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    external: true

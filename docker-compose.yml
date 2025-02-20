@@ -33,12 +33,21 @@ services:
       #WEBPORT: 8080
     networks:
       - mynet 
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 
+          127.0.0.1:24224
+        tag: speedtest
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.librespeed.entrypoints=http"
       - "traefik.http.routers.librespeed.rule=PathPrefix(`/`)"
       - "traefik.http.routers.librespeed.service=speedtest"      
       - "traefik.http.services.speedtest.loadbalancer.server.port=80"
+
+
 
   reverse-proxy:
     image: traefik:v2.11
@@ -51,8 +60,14 @@ services:
       - mynet
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 
+          127.0.0.1:24224
+        tag: traefik
 
 networks:
   mynet:
     name: mynet
-#    external: true
+    external: true
