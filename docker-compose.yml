@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile
     image: unittest
     #container_name: librespeed
-    ports:
-      - "80:80"
+#    ports:
+#      - "80:80"
 #    volumes:
       #- result:/var/www/html/result
       #- .:/speedtest
@@ -16,6 +16,8 @@ services:
       #- ./docker/entrypoint.sh:/docker-entrypoint.d/entrypoint.sh     
       #- ./docker/servers.json:/servers.json
       #- ./database/db.sql:/database/db.sql 
+    expose:
+      - 80
     restart: unless-stopped
     environment:
       MODE: frontend
@@ -29,5 +31,28 @@ services:
       #IPINFO_APIKEY: "your api key"
       #DISTANCE: "km"
       #WEBPORT: 8080
-#volumes:
-#  result:
+    networks:
+      - mynet 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.librespeed.entrypoints=http"
+      - "traefik.http.routers.librespeed.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.librespeed.service=speedtest"      
+      - "traefik.http.services.speedtest.loadbalancer.server.port=80"
+
+  reverse-proxy:
+    image: traefik:v2.11
+    command: --api.insecure=true --providers.docker --entrypoints.http.address=:80 --entrypoints.websecure.address=:443 --entrypoints.kibana.address=:5601 --accesslog --accesslog.filepath=/var/log/traefik/access.log
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "5601:5601"
+    networks:
+      - mynet
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  mynet:
+    name: mynet
+#    external: true

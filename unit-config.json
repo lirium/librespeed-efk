@@ -1,64 +1,48 @@
 {
-	"listeners": {
-		"*:80": {
-			"pass": "routes"
-		}
-	},
-	"routes": [
-		{
-			"match": {
-				"uri": [
-					"*.js"
-				]
-			},
-			"action": {
-				"share": [
-					"/var/www/html/$uri"
-				]
-			}
-		},
-		{
-			"match": {
-				"uri": [
-					"/"
-				]
-			},
-			"action": {
-				"pass": "applications/test/main"
-			}
-		},
-		{
-			"match": {
-				"uri": [
-					"/results/telemetry.php"
-				]
-			},
-			"action": {
-				"pass": "applications/test/telemetry"
-			}
-		}
-	],
-
-
-"applications": {
-        "test": {
-            "type": "php",
-            "targets": {
-                "telemetry": {
-                    "root": "/var/www/html/"
-                },
-
-                "main": {
-                    "root": "/var/www/html/",
-                    "script": "index.php"
-                }
-            }
-        }
+  "listeners": {
+    "*:80": {
+      "pass": "routes"
     }
-
-
-
-
-
-
+  },
+  "routes": [
+    {
+      "match": {
+        "uri": ["*.js", "*.ico"]
+      },
+      "action": {
+        "share": "/var/www/html/$uri"
+      }
+    },
+    {
+      "match": {
+        "uri": ["/results/telemetry.php"]
+      },
+      "action": {
+        "pass": "applications/test/telemetry"
+      }
+    },
+    {
+      "match": {
+        "uri": ["/"]
+      },
+      "action": {
+        "pass": "applications/test/main"
+      }
+    }
+  ],
+  "applications": {
+    "test": {
+      "type": "php",
+      "targets": {
+        "telemetry": {
+          "root": "/var/www/html/results/",
+          "script": "telemetry.php"
+        },
+        "main": {
+          "root": "/var/www/html/",
+          "script": "index.php"
+        }
+      }
+    }
+  }
 }
