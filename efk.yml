@@ -28,6 +28,7 @@ services:
       - "discovery.type=single-node"
       - "xpack.security.enabled=false"
       - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" 
+      - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=GivajiUxi5!"
 #    expose:
 #      - 9200
     ports:
@@ -46,15 +47,16 @@ services:
 #      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
 #    links:
 #      - "elasticsearch"
-#    depends_on:
-#      - elasticsearch
-#      - fluentd
+    depends_on:
+      - elasticsearch
+      - fluentd
 
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kibana.entrypoints=http"
+      - "traefik.http.routers.kibana.entrypoints=kibana"
       - "traefik.http.routers.kibana.rule=PathPrefix(`/`)"       
       - "traefik.http.services.kibana.loadbalancer.server.port=5601"
+#      - "traefik.http.services.kibana.loadbalancer.servers.url=http://localhost:5601"
 #      mode: replicated
 #      replicas: 1
       #placement:
