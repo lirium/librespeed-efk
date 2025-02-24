@@ -1,3 +1,7 @@
 #!/bin/bash
-docker-compose -f efk.yml down
-docker-compose -f docker-compose.yml down
+sudo systemctl restart containerd.service
+
+sudo systemctl restart docker
+
+docker-compose -f efk.compose.yml -p rbmdkrfinalefk down
+docker-compose -f app.compose.yml -p rbmdkrfinalapp down

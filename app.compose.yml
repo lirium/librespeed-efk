@@ -22,16 +22,13 @@ services:
         fluentd-address: 
           127.0.0.1:24224
         tag: speedtest
-
-
-
-
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.librespeed.entrypoints=http"
       - "traefik.http.routers.librespeed.rule=PathPrefix(`/`)"
       - "traefik.http.services.librespeed.loadbalancer.server.port=80"
-
+      - "traefik.http.middlewares.add-client-ip.headers.customrequestheaders.X-Client-IP=X-Forwarded-For"
+      - "traefik.http.routers.librespeed.middlewares=add-client-ip"
 
 
   reverse-proxy:
@@ -43,6 +40,8 @@ services:
       - "5601:5601"
     networks:
       - mynet
+    depends_on:
+      - librespeed 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     logging:
