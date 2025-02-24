@@ -1,0 +1,55 @@
+version: "3"
+services:
+  fluentd:
+    build: ./fluentd
+    volumes:
+      - ./fluentd/conf/:/fluentd/etc
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    depends_on:
+      - opensearch
+    networks:
+      - mynet
+
+  opensearch:
+    image: opensearchproject/opensearch:2
+    container_name: opensearch-node1
+    environment:
+      - "discovery.type=single-node"
+      - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" 
+      - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=GivajiUxi5!"
+      - "DISABLE_SECURITY_PLUGIN=true"
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    networks:
+      - mynet
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+    depends_on:
+      - opensearch
+      - fluentd
+    environment:
+      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
+      - "OPENSEARCH_HOSTS=http://opensearch-node1:9200"
+    mem_limit: 512m
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboards.entrypoints=kibana"
+      - "traefik.http.routers.dashboards.rule=PathPrefix(`/`)"       
+      - "traefik.http.services.dashboards.loadbalancer.server.port=5601"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 
+          127.0.0.1:24224
+        tag: opensearchdash
+
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    external: true
