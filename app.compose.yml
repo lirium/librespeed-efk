@@ -29,13 +29,9 @@ services:
       - "traefik.http.routers.librespeed.entrypoints=http"
       - "traefik.http.routers.librespeed.rule=PathPrefix(`/`)"
       - "traefik.http.services.librespeed.loadbalancer.server.port=80"
-      - "traefik.http.routers.librespeed.middlewares=add-client-ip,testheader"  
+      - "traefik.http.routers.librespeed.middlewares=add-client-ip"  
       - "traefik.http.middlewares.add-client-ip.headers.customrequestheaders.X-Client-IP=X-Forwarded-For"
-      - "traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
-      - "traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=*"
-      - "traefik.http.middlewares.testheader.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.testheader.headers.addvaryheader=true"
+
   reverse-proxy:
     image: traefik:v2.11
     command: --api.insecure=true --providers.docker --entrypoints.http.address=:80 --entrypoints.kibana.address=:5601 --accesslog
