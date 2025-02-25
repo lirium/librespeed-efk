@@ -11,7 +11,11 @@ services:
       - opensearch
     networks:
       - mynet
-
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
   opensearch:
     image: opensearchproject/opensearch:2
     container_name: opensearch-node1
